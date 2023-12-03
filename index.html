@@ -11,7 +11,7 @@
             color: #2c3e50;
             margin: 0;
             margin-top: 60px;
-            background-color: black;
+            background-color: rgb(32, 32, 32);
             padding: 20px;
             margin-bottom: 50px;
         }
@@ -38,10 +38,12 @@
             position: fixed;
             bottom: 0;
             width: 100%;
-            background-color: rgb(0, 0, 0);
+            background-color: rgb(32, 32, 32);
             padding: 4px;
             color: rgb(247, 247, 247);
-            margin: 0; /* Removendo a margem do rodapé */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         footer p {
@@ -50,14 +52,36 @@
         }
 
         .logo {
-            width: 5cm;
+            margin-top: 30;
+            width: 4cm;
             height: 4cm;
+        }
+
+        /* Estilos para a caixa de mensagem (modal) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(121, 59, 59, 0.096);
+            z-index: 1000;
+        }
+
+        /* Estilos para o nome Starkes */
+        .centered-text {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
 <body>
 
-    <img class="logo" src="CaveiraBope.png" alt="CaveiraBope Logo">
+    <img class="logo" src="CaveiraBope2.png" alt="CaveiraBope Logo">
     <h1 style="color: white;">
         AceOnline Framebreak Calculator **BOPE**
     </h1>
@@ -74,9 +98,26 @@
 
     <div id="results"></div>
 
+    <!-- Rodapé -->
     <footer>
-        <p>Starkes</p>
+        <p class="centered-text">Starkes</p>
+        <a href="#" onclick="openModal()" style="color: white;">FAQ?</a>
     </footer>
+
+    <!-- Caixa de Mensagem (modal) -->
+    <div class="modal" id="modalBox">
+        <!-- Conteúdo da mensagem -->
+        <p>Para usar Primeiro digite o Base reattack time = Reattack Time na Arma.<br>
+            Segundo coloque quantos Tiros (1x1) = 1  (2x1) = 2 e assim por diante.<br>
+            Depois escolha o FPS médio que você joga, ou vá alterando para ver qual o melhor a se usar.<br><br><br>
+            To use First, type the Base reattack time = Reattack Time on the Weapon.<br>
+            Second put how many Shots (1x1) = 1 (2x1) = 2 and so on.<br>
+            Then choose the average FPS you play, or change it to see which one is best to use.<br><br><br>
+            Obs: Feito para STD.Made for STD.<br>
+            Obs: Agear adicione tiro continuous.Agear add continuous shooting.
+        </p>
+        <button onclick="closeModal()">Fechar</button>
+    </div>
 
     <script>
         function calculateBreakpoints() {
@@ -89,32 +130,31 @@
         }
 
         function calcFBs(baseRea, firingMode, fps = 60, toReaPercent = 81) {
-  let fbs = [];
-  let last;
-  for (let i = 0; i < toReaPercent; i++) {
-    let bps;
-    let t1 = (1 / (baseRea * (1 - i / 100))) * firingMode;
+            let fbs = [];
+            let last;
+            for (let i = 0; i < toReaPercent; i++) {
+                let bps;
+                let t1 = (1 / (baseRea * (1 - i / 100))) * firingMode;
 
-    console.log(`Rea ${i}, t1 ${t1}`);
+                console.log(`Rea ${i}, t1 ${t1}`);
 
-    for (let j = 1; j < 61; j++) {
-      let t2 = fps / j;
-      if (t2 <= t1) {
-        bps = t2;
-        break;
-      }
-    }
+                for (let j = 1; j < 61; j++) {
+                    let t2 = fps / j;
+                    if (t2 <= t1) {
+                        bps = t2;
+                        break;
+                    }
+                }
 
-    console.log(`Rea ${i}, bps ${bps}`);
+                console.log(`Rea ${i}, bps ${bps}`);
 
-    if (last != bps) {
-      fbs.push({ rea: i, bps: bps });
-    }
-    last = bps;
-  }
-  return fbs;
-}
-
+                if (last != bps) {
+                    fbs.push({ rea: i, bps: bps });
+                }
+                last = bps;
+            }
+            return fbs;
+        }
 
         function displayResults(breakpoints) {
             var resultsDiv = document.getElementById('results');
@@ -145,6 +185,14 @@
 
                 resultsDiv.appendChild(table);
             }
+        }
+
+        function openModal() {
+            document.getElementById('modalBox').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modalBox').style.display = 'none';
         }
     </script>
 
